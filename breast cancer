@@ -1,0 +1,41 @@
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+data={
+    'patient':[1,2,3,4,5,6,7],
+    'diagnosis':[34,76,12,30,22,88,11]
+    }
+df = pd.DataFrame(data)  
+print(df.head())
+
+# Step 2: Basic statistical computations
+print(df.describe())
+
+# Step 3: Check columns and data types
+print(df.info())
+
+# Step 4: Handle null values (if any)
+df.fillna(df.mode().iloc[0], inplace=True)
+
+# Step 5: Split the data into train and test sets
+X = df.drop('diagnosis',axis=1) # Assuming features start from column 2 onwards
+y = df['diagnosis']  # Assuming 'diagnosis' column indicates the target variable (M/B)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 6: Build and train the Naive Bayes classifier
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Step 7: Make predictions
+y_pred = model.predict(X_test)
+
+# Step 8: Evaluate the model (confusion matrix and accuracy)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(conf_matrix)
