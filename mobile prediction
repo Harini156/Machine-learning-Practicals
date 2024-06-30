@@ -1,0 +1,54 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data={
+    'brand':[1,2,3,4,5,6,7],
+    'price':[20000,30000,450000,56000,76000,34555,23000]
+    }
+df = pd.DataFrame(data)
+
+# Step 2: Print the first five rows
+print(df.head())
+
+# Step 3: Basic statistical computations
+print(df.describe())
+
+# Step 4: Check columns and data types
+print(df.info())
+
+print("\nNull value counts before replacing:")
+print(df.isnull().sum())
+
+# Replace null values with mode (most frequent value) for each column
+df = df.fillna(df.mode().iloc[0])
+
+print("\nNull value counts after replacing:")
+print(df.isnull().sum())
+
+# Step 6: Explore the dataset using heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Heatmap')
+plt.show()
+
+# Step 7: Split the data into training and testing sets
+X = df.drop('price', axis=1)
+y = df['price']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 8: Fit the model: Naive Bayes Classifier
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Step 9: Make predictions
+y_pred = model.predict(X_test)
+
+# Step 10: Evaluate the model accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy of Naive Bayes Classifier: {accuracy:.2f}")
